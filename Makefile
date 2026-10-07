@@ -8,7 +8,7 @@ BIN_DIR    = bin
 SERVER_BIN_DIR = $(BIN_DIR)/server
 SERVER_BIN = $(SERVER_BIN_DIR)/server
 
-.PHONY: all proto build build-server run-server clean help
+.PHONY: all proto build-server run-server clean help
 
 ## all: Default target - generates proto and builds server.
 all: proto build-server
