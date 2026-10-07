@@ -31,7 +31,7 @@ func get_log_msg(loglevel uint8, msg string, args ...interface{}) string {
 		msg_prefix = "#### "
 	}
 
-	log_msg := fmt.Sprintf("[%s] [%s] [%s +%d]@[%s]:\n", msg_ts, str_loglevel, src_file, line, func_name)
+	log_msg := fmt.Sprintf("[%s] [%s] [%s +%d]@[%s]:\n", msg_ts, str_loglevel.str, src_file, line, func_name)
 	log_msg = fmt.Sprintf(log_msg + msg, args...)
 	log_msg = msg_prefix + log_msg + "\n"
 
