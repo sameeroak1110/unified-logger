@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package message;
+
+option go_package = "./proto";
+
+service MessageService {
+	// 'stream' is added before MessageRequest in the method definition
+	rpc SendMessageStream (stream MessageRequest) returns (MessageSummary);
+}
+
+message MessageRequest {
+	string content = 1;
+}
+
+message MessageSummary {
+	int32 total_received = 1;
+	int32 total_queued   = 2;
+}

@@ -1,0 +1,159 @@
+//package main
+package client
+
+import (
+	"fmt"
+	"time"
+	"runtime"
+	"path"
+	"strings"
+
+	//pb "unified-logger/proto" // Replace with your actual module path
+	"unified-logger/data"
+)
+
+
+//(pc *Client) Log(pkgname string, str_loglevel string, msg string, args ...interface{}) {
+/* func (pc *Client) _Log_1(str_loglevel string, msg string, args ...interface{}) {
+	current_loglevel := map_loglevel[current_LOG_LEVEL]  // 0: DBGRM, 1: DEBUG, 2: INFO, 3: WARNING, 4: ERROR
+	msg_loglevel, is_ok := map_loglevel[str_loglevel]
+	if is_ok == false {
+		return
+	}
+	if (msg_loglevel.wt < current_loglevel.wt) && (current_loglevel.wt != 1) { // Silently slips through a DBGRM message when current_loglevel.wt is 1 (DEBUG)
+		return
+	}
+
+	t := time.Now()
+	zonename, _ := t.In(time.Local).Zone()
+	msg_ts := fmt.Sprintf("%02d-%02d-%d:%02d%02d%02d-%06d-%s", t.Day(), t.Month(), t.Year(), t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), zonename)
+	pc, fn, line, _ := runtime.Caller(1)
+} */
+
+
+//func get_msg(_loglevel uint8, _msg string, arg ...interface{}) (log_msg, error) {
+func get_msg(_loglevel uint8, _msg string, arg ...interface{}) (string, error) {
+	var err error
+
+	loglevel, is_ok := map_loglevel[_loglevel]
+	if is_ok == false { // Invalid loglevel.
+		err = fmt.Errorf("ERROR: Invalid log-level.")
+		return log_msg{}, err
+	}
+
+	return loglevel, nil
+}
+
+//func (pc *Logger) Log(str_loglevel string, msg string, args ...interface{}) error {
+func (pc *Logger) Log(loglevel uint8, msg string, args ...interface{}) error {
+	if loglevel < pc.log_level {
+		if loglevel != DBGRM {
+			return nil  // Current log_level is higher. Ignoring this log message.
+		}
+	}
+
+	_loglevel, is_ok := map_loglevel[loglevel]
+	if is_ok == false {
+		return nil  // Invalid loglevel.
+	}
+	str_loglevel := _loglevel.str
+
+	t := time.Now()
+	zonename, _ := t.In(time.Local).Zone()
+	msg_ts := fmt.Sprintf("%02d-%02d-%d-%02d%02d%02d-%06d-%s", t.Day(), t.Month(), t.Year(), t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), zonename)
+	_pc, fn, line, _ := runtime.Caller(1)
+
+	tmp1 := strings.Split((runtime.FuncForPC(_pc).Name()), ".")
+	pkgname := tmp1[0]
+	src_file := pkgname + "/" + path.Base(fn)
+	//func_name := []string{}
+	func_name := tmp1[1]
+	/* for i, v := range tmp1 {
+		if i == 0 {
+			continue
+		}
+		func_name = func_name + "." + v
+	}
+	func_name := tmp1[1] */
+
+	msg_prefix := ""
+	//if str_loglevel == "DBGRM" {
+	if loglevel == DBGRM {
+		msg_prefix = "#### "
+	}
+
+	//log_msg := fmt.Sprintf("[%s] [%s] [%s] [%s +%d]@[%s]:\n", strcomponent, msg_ts, str_loglevel, src_file, line, func_name)
+	log_msg := fmt.Sprintf("[%s] [%s] [%s +%d]@[%s]:\n", msg_ts, str_loglevel, src_file, line, func_name)
+	log_msg = fmt.Sprintf(log_msg + msg, args...)
+	log_msg = msg_prefix + log_msg + "\n"
+
+	//fmt.Printf(log_msg)
+
+	//return stream.Send(&pb.MessageRequest{Content: log_msg})
+	return pc.Send(log_msg)
+}
+
+func get_log_msg(loglevel uint8, _msg string, arg ...interface{}) (string, error) {
+	t := time.Now()
+	zonename, _ := t.In(time.Local).Zone()
+	msg_ts := fmt.Sprintf("%02d-%02d-%d-%02d%02d%02d-%06d-%s", t.Day(), t.Month(), t.Year(), t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), zonename)
+	_pc, fn, line, _ := runtime.Caller(1)
+
+	tmp1 := strings.Split((runtime.FuncForPC(_pc).Name()), ".")
+	pkgname := tmp1[0]
+	src_file := pkgname + "/" + path.Base(fn)
+	func_name := tmp1[1]
+
+	msg_prefix := ""
+	if loglevel == DBGRM {
+		msg_prefix = "#### "
+	}
+
+	log_msg := fmt.Sprintf("[%s] [%s] [%s +%d]@[%s]:\n", msg_ts, str_loglevel, src_file, line, func_name)
+	log_msg = fmt.Sprintf(log_msg + msg, args...)
+	log_msg = msg_prefix + log_msg + "\n"
+
+	return log_msg, nil
+}
+
+func (pc *Logger) Dbgrm(msg string, args ...interface{}) error {
+	str, _ := get_log_msg(DBGRM, msg, args)
+	return nil
+}
+
+func (pc *Logger) Debug(msg string, args ...interface{}) error {
+	if DEBUG < pc.log_level {
+		return nil
+	}
+
+	str := get_log_msg(msg, args)
+
+	return nil
+}
+
+
+func (pc *Logger) Info(msg string, args ...interface{}) error {
+	if data.INFO < pc.log_level {
+		return nil
+	}
+
+	return nil
+}
+
+
+func (pc *Logger) Warning(msg string, args ...interface{}) error {
+	if data.WARNING < pc.log_level {
+		return nil
+	}
+
+	return nil
+}
+
+
+func (pc *Logger) Error(msg string, args ...interface{}) error {
+	if data.ERROR < pc.log_level {
+		return nil
+	}
+
+	return nil
+}
