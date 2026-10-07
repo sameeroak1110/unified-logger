@@ -6,7 +6,7 @@ PROTO_SRC  = $(PROTO_DIR)/message.proto
 BIN_DIR    = bin
 
 SERVER_BIN_DIR = $(BIN_DIR)/server
-SERVER_BIN = $(SERVER_BIN_DIR)/server
+SERVER_BIN = $(SERVER_BIN_DIR)/server.app.bin
 
 .PHONY: all proto build-server run-server clean help
 
