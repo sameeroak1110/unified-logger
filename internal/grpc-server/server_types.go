@@ -2,7 +2,7 @@
 package main
 
 import (
-	pb "unified-logger/proto"
+	pb "github.com/sameeroak1110/unified-logger/proto"
 )
 
 type server struct {

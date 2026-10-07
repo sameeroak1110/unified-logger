@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	pb "unified-logger/proto" // Replace with your actual module path
+	pb "github.com/sameeroak1110/unified-logger/proto"
 	/* "unified-logger/data"
 	"unified-logger/types"
 	"unified-logger/logger" */

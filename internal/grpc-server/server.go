@@ -14,9 +14,9 @@ import (
 
 	"google.golang.org/grpc"
 
-	pb "unified-logger/proto"
+	pb "github.com/sameeroak1110/unified-logger/proto"
 
-	"unified-logger/worker"
+	"github.com/sameeroak1110/unified-logger/worker"
 )
 
 /* type server struct {
