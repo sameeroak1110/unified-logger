@@ -23,7 +23,7 @@ func get_log_msg(loglevel uint8, msg string, args ...interface{}) string {
 	//_pc, fn, line, _ := runtime.Caller(2)
 	_pc, fn, line, _ := runtime.Caller(1)
 
-	/* tmp1 := strings.Split((runtime.FuncForPC(_pc).Name()), ".")
+	tmp1 := strings.Split((runtime.FuncForPC(_pc).Name()), ".")
 	pkgname := tmp1[0]
 	src_file := pkgname + "/" + path.Base(fn)
 	func_name := tmp1[1]
@@ -31,9 +31,9 @@ func get_log_msg(loglevel uint8, msg string, args ...interface{}) string {
 	msg_prefix := ""
 	if loglevel == DBGRM {
 		msg_prefix = "#### "
-	} */
+	}
 
-	fullName := runtime.FuncForPC(pc).Name() // for instance, "github.com/user/repo/examples/app.main"
+	/* fullName := runtime.FuncForPC(pc).Name() // for instance, "github.com/user/repo/examples/app.main"
 
 	// Splits the function name from the package path through finding the last dot.
 	lastDot := strings.LastIndex(fullName, ".")
@@ -47,7 +47,7 @@ func get_log_msg(loglevel uint8, msg string, args ...interface{}) string {
 	}
 
 	fileName := filepath.Base(file) // for instance, main.go
-	srcFile = pkgName + "/" + fileName
+	srcFile = pkgName + "/" + fileName */
 
 	log_msg := fmt.Sprintf("[%s] [%s] [%s +%d]@[%s]:\n", msg_ts, str_loglevel.str, src_file, line, func_name)
 	log_msg = fmt.Sprintf(log_msg + msg, args...)
