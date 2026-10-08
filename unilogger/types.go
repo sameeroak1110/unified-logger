@@ -1,6 +1,6 @@
 //package main
 //package types
-package logger
+package unilogger
 
 import (
 	"google.golang.org/grpc"

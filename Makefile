@@ -13,6 +13,17 @@ SERVER_BIN = $(SERVER_BIN_DIR)/server.app.bin
 ## all: Default target - generates proto and builds server.
 all: proto build-server
 
+tidy-clean:
+	go clean --cache --modcache -i -r
+
+tidy: tidy-clean
+	@echo $(VDATE)
+	@mv go.mod go.mod.$(VDATE)
+	@rm -f go.sum
+	@rm -f go.mod
+	go mod init github.com/sameeroak1110/unified-logger
+	go mod tidy
+
 ## proto: Generates Go gRPC code from the .proto definition
 proto:
 	@echo "==> Generating gRPC proto code..."
@@ -21,8 +32,13 @@ proto:
 		$(PROTO_SRC)
 
 ## build-server: Compiles only the server binary
-build-server: proto
+build-server: tidy proto
 	@echo "==> Building server binary..."
+	@mkdir -p $(SERVER_BIN_DIR)
+	go build -race -o $(SERVER_BIN) ./$(SERVER_DIR)
+
+build-server-local: proto
+	@echo "Building server binary locally..."
 	@mkdir -p $(SERVER_BIN_DIR)
 	go build -race -o $(SERVER_BIN) ./$(SERVER_DIR)
 

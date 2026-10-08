@@ -1,5 +1,5 @@
 //package main
-package logger
+package unilogger
 
 import (
 	"fmt"
