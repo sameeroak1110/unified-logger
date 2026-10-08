@@ -19,9 +19,9 @@ func get_log_msg(loglevel uint8, msg string, args ...interface{}) string {
 	t := time.Now()
 	zonename, _ := t.In(time.Local).Zone()
 	msg_ts := fmt.Sprintf("%02d-%02d-%d-%02d%02d%02d-%06d-%s", t.Day(), t.Month(), t.Year(), t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), zonename)
-	_pc, fn, line, _ := runtime.Caller(0)
-	//_pc, fn, line, _ := runtime.Caller(2)
+	//_pc, fn, line, _ := runtime.Caller(0)
 	//_pc, fn, line, _ := runtime.Caller(1)
+	_pc, fn, line, _ := runtime.Caller(2)
 
 	tmp1 := strings.Split((runtime.FuncForPC(_pc).Name()), ".")
 	pkgname := tmp1[0]
@@ -33,21 +33,22 @@ func get_log_msg(loglevel uint8, msg string, args ...interface{}) string {
 		msg_prefix = "#### "
 	}
 
-	/* fullName := runtime.FuncForPC(pc).Name() // for instance, "github.com/user/repo/examples/app.main"
+	/* full_name := runtime.FuncForPC(_pc).Name() // for instance, "github.com/user/repo/examples/app.main"
+	pkg_name, func_name := "", ""
 
 	// Splits the function name from the package path through finding the last dot.
-	lastDot := strings.LastIndex(fullName, ".")
+	lastDot := strings.LastIndex(full_name, ".")
 	if lastDot != -1 {
-		funcName = fullName[lastDot+1:]
-		fullPkg := fullName[:lastDot]
-		pkgName = path.Base(fullPkg) // for instance, app
+		func_name = full_name[lastDot+1:]
+		full_pkg := full_name[:lastDot]
+		pkg_name = path.Base(full_pkg) // for instance, app
 	} else {
-		funcName = fullName
-		pkgName = "unknown"
+		func_name = full_name
+		pkg_name = "unknown"
 	}
 
-	fileName := filepath.Base(file) // for instance, main.go
-	srcFile = pkgName + "/" + fileName */
+	file_name := filepath.Base(file) // for instance, main.go
+	src_file = pkg_name + "/" + file_name */
 
 	log_msg := fmt.Sprintf("[%s] [%s] [%s +%d]@[%s]:\n", msg_ts, str_loglevel.str, src_file, line, func_name)
 	log_msg = fmt.Sprintf(log_msg + msg, args...)
@@ -57,7 +58,7 @@ func get_log_msg(loglevel uint8, msg string, args ...interface{}) string {
 }
 
 func (pc *Logger) Dbgrm(msg string, args ...interface{}) error {
-	log_msg := get_log_msg(DBGRM, msg, args)
+	log_msg := get_log_msg(DBGRM, msg, args...)
 
 	return pc.Send(log_msg)
 }
@@ -67,7 +68,7 @@ func (pc *Logger) Debug(msg string, args ...interface{}) error {
 		return nil
 	}
 
-	log_msg := get_log_msg(DEBUG, msg, args)
+	log_msg := get_log_msg(DEBUG, msg, args...)
 	return pc.Send(log_msg)
 }
 
@@ -77,7 +78,7 @@ func (pc *Logger) Info(msg string, args ...interface{}) error {
 		return nil
 	}
 
-	log_msg := get_log_msg(INFO, msg, args)
+	log_msg := get_log_msg(INFO, msg, args...)
 	return pc.Send(log_msg)
 }
 
@@ -87,7 +88,7 @@ func (pc *Logger) Warning(msg string, args ...interface{}) error {
 		return nil
 	}
 
-	log_msg := get_log_msg(WARNING, msg, args)
+	log_msg := get_log_msg(WARNING, msg, args...)
 	return pc.Send(log_msg)
 }
 
@@ -97,8 +98,6 @@ func (pc *Logger) Error(msg string, args ...interface{}) error {
 		return nil
 	}
 
-	log_msg := get_log_msg(ERROR, msg, args)
+	log_msg := get_log_msg(ERROR, msg, args...)
 	return pc.Send(log_msg)
-
-	return nil
 }
