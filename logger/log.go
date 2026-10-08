@@ -19,7 +19,9 @@ func get_log_msg(loglevel uint8, msg string, args ...interface{}) string {
 	t := time.Now()
 	zonename, _ := t.In(time.Local).Zone()
 	msg_ts := fmt.Sprintf("%02d-%02d-%d-%02d%02d%02d-%06d-%s", t.Day(), t.Month(), t.Year(), t.Hour(), t.Minute(), t.Second(), t.Nanosecond(), zonename)
-	_pc, fn, line, _ := runtime.Caller(2)
+	//_pc, fn, line, _ := runtime.Caller(0)
+	//_pc, fn, line, _ := runtime.Caller(2)
+	_pc, fn, line, _ := runtime.Caller(1)
 
 	tmp1 := strings.Split((runtime.FuncForPC(_pc).Name()), ".")
 	pkgname := tmp1[0]
