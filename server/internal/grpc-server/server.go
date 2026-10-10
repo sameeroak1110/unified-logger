@@ -16,7 +16,7 @@ import (
 
 	pb "github.com/sameeroak1110/unified-logger/proto"
 
-	"github.com/sameeroak1110/unified-logger/worker"
+	"github.com/sameeroak1110/unified-logger/server/worker"
 )
 
 /* type server struct {
