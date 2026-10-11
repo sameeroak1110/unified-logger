@@ -4,6 +4,8 @@ SERVER_DIR = internal/grpc-server
 #PROTO_DIR  = proto
 #PROTO_SRC  = $(PROTO_DIR)/message.proto
 BIN_DIR    = bin
+#CURRENT_TIME := $(shell date)
+VDATE := $(shell date "+%d-%b-%Y-%H%M%S-%3N")
 
 SERVER_BIN_DIR = $(BIN_DIR)/server
 SERVER_BIN = $(SERVER_BIN_DIR)/server.app.bin
