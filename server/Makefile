@@ -25,7 +25,7 @@ tidy: tidy-clean
 	@mv go.mod go.mod.$(VDATE)
 	@rm -f go.sum
 	@rm -f go.mod
-	go mod init github.com/sameeroak1110/unified-logger
+	go mod init github.com/sameeroak1110/unified-logger/server
 	go mod tidy
 
 ## proto: Generates Go gRPC code from the .proto definition
